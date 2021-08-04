@@ -7,7 +7,7 @@ const { API_KEY } = process.env;
 
 module.exports = (sequelize) => {
   // defino el modelo
-  sequelize.define("genero", {
+  sequelize.define("genere", {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
