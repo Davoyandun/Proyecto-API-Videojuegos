@@ -1,7 +1,12 @@
-const { Router } = require("express");
+const {
+  Router
+} = require("express");
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
-const { Videogame, Genere } = require("../db");
+const {
+  Videogame,
+  Genere
+} = require("../db");
 
 const axios = require("axios");
 
@@ -116,8 +121,32 @@ router.get("/videogames", async (req, res) => {
   const qName = req.query.name;
   const games = await allInfo();
   if (qName) {
-    let namesMatch = await games.filter((e) => {
+
+    const nameGame = await axios.get(`https://api.rawg.io/api/games?key=0377e95fcacd4286ab3a097c4fd9fd2b&search=${qName}`)
+
+    let namesMatch = await nameGame.data.results.filter((e) => {
       return e.name.toLowerCase().includes(qName.toLowerCase());
+    });
+    namesMatch = await namesMatch.map((e) => {
+      return {
+        name: e.name,
+        id: e.id,
+        released: e.released,
+        description: e.description,
+        img: e.background_image,
+        rating: e.rating,
+
+        generes: e.genres.map((e) => {
+          return {
+            genere: e.name,
+          };
+        }),
+        platforms: e.platforms.map((e) => {
+          return {
+            platform: e.name,
+          };
+        }),
+      };
     });
 
     if (namesMatch.length) {
@@ -132,19 +161,41 @@ router.get("/videogames", async (req, res) => {
   }
 });
 
-/*
-- [ ] __GET /videogame/{idVideogame}__:
-  - Obtener el detalle de un videojuego en particular
-  - Debe traer solo los datos pedidos en la ruta de detalle de videojuego
-  - Incluir los géneros asociados*/
 
-router.get(`/videogames/${idVideogame}`, async (req, res) => {
-  const games = await allInfo();
-  let gameDetail = await games.filter((e) => {
-    if (e.id == idVideogame) return e;
 
-  });
-  res.status(200).send(gameDetail)
+router.get(`/videogames/:id`, async (req, res) => {
+  let id = req.params.id
+  const idGame = await axios.get(`https://api.rawg.io/api/games/${id}?key=0377e95fcacd4286ab3a097c4fd9fd2b`)
+
+
+
+
+
+  const detailGame = [{
+      name: idGame.data.name,
+      description: idGame.data.description_raw,
+      released: idGame.data.released,
+      img: idGame.data.background_image,
+      website: idGame.data.website,
+      rating: idGame.data.rating,
+      platform: idGame.data.platforms.map(e => {
+        return {
+          platform: e.platform.name,
+        }
+      }),
+      genres: idGame.data.genres.map(e => {
+        return {
+          name: e.name
+        }
+      }),
+  }]
+
+
+  res.status(200).send(detailGame)
 });
+
+
+
+
 
 module.exports = router;

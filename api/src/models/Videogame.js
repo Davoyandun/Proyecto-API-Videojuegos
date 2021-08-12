@@ -1,4 +1,6 @@
-const { DataTypes } = require("sequelize");
+const {
+  DataTypes
+} = require("sequelize");
 const axios = require("axios");
 
 // Exportamos una funcion que define el modelo
@@ -36,7 +38,7 @@ module.exports = (sequelize) => {
     platform: {
       type: DataTypes.STRING,
       allowNull: false,
-     
+
     },
     createDB: {
       type: DataTypes.BOOLEAN,
