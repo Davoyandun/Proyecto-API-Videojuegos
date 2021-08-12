@@ -1,6 +1,5 @@
 const {
-  DataTypes
-} = require("sequelize");
+  DataTypes} = require("sequelize");
 const axios = require("axios");
 
 // Exportamos una funcion que define el modelo
