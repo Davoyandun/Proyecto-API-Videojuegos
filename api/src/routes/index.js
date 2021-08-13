@@ -1,7 +1,7 @@
 const { Router } = require("express");
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
-const { Videogame, Genere, genere_videogame} = require("../db");
+const { Videogame, Genere, genere_videogame } = require("../db");
 const { v4: uuidv4 } = require("uuid");
 
 const axios = require("axios");
@@ -95,8 +95,8 @@ const infoDb = async () => {
 };
 
 const allInfo = async () => {
-  let gamesApi1 = await infoApi1();
   let gamesDb = await infoDb();
+  let gamesApi1 = await infoApi1();
   let gamesApi2 = await infoApi1(2);
   let gamesApi3 = await infoApi1(3);
   let gamesApi4 = await infoApi1(4);
@@ -209,23 +209,31 @@ router.get("/genres", async (req, res) => {
 });
 
 router.post("/videogame", async (req, res) => {
-  const { name, genres, released, rating, img, description, platform,id } =
+  const { name, genres, released, rating,description, platform, } =
     req.body;
-  let newVideoGame = await Videogame.findOrCreate({
-    where: {
+
+  let newVideoGame = await Videogame.create({
       name: name,
       description: description,
       releaseDate: released,
       rating: rating,
       platform: platform,
-      id:uuidv4(), 
+      id: uuidv4(),
+    
+  });
+ 
+  let genreDB = await Genere.findAll({
+    where: {
+      name: genres,
     },
   });
-  newVideoGame.push(genres)
 
+   await newVideoGame.addGenere(genreDB); 
 
-  res.status(200).send(newVideoGame)
-  
+  const response =  await Videogame.findAll({
+  include: Genere
+  })
+  res.status(200).send(response);
 });
 
 module.exports = router;
