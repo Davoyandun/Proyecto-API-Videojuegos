@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function card(videogame) {
+export default function card({videogame}) {
   const { name, genere, rating, img } = videogame;
   return (
     <div>

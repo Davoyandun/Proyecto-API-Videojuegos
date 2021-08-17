@@ -1,10 +1,9 @@
-import { func } from "prop-types";
-import React from "react";
+import React, { Fragment } from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getGames } from "../actios";
 import { Link } from "react-router-dom";
-import card from "./card";
+
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -12,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     dispatch(getGames());
-  }, []);
+  }, [dispatch]);
 
   function refresh(e) {
     e.preventDefault();
@@ -21,8 +20,9 @@ export default function Home() {
 
   return (
     <div>
-      <Link to="/videogame">Crear personaje</Link>
       <h1>Videojuegos Henry</h1>
+      <Link to="/videogame">Crear personaje</Link>
+      <br></br>
       <button
         onClick={(e) => {
           refresh(e);
@@ -70,7 +70,17 @@ export default function Home() {
         </select>
         <div>
            { allGames.map((e)=>{
-                <card e/>
+              return (
+                
+                <Fragment>
+                  {console.log(e)}
+                  <Link to ={'/home/'+ e.id}>
+                    <card e/>
+                  </Link>
+                  <card e/> 
+                </Fragment>
+                
+              )
             })}
         </div>
       </div>

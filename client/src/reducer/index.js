@@ -13,8 +13,6 @@ function rootReducer(state = initialState, action) {
         ...state,
         games: action.payload,
       };
-
-      
     default:
         return state
       
