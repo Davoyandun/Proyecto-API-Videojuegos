@@ -10,6 +10,8 @@ const router = Router();
 
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
+// este es solo un comentario para probar git 
+
 
 let ruta = "videogames";
 
