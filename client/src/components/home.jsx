@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getGames } from "../actios";
 import { Link } from "react-router-dom";
+import Card from "./Card";
+
 
 
 export default function Home() {
@@ -13,19 +15,22 @@ export default function Home() {
     dispatch(getGames());
   }, [dispatch]);
 
-  function refresh(e) {
+  function handleRefresh(e) {
     e.preventDefault();
     dispatch(getGames());
   }
-
   return (
     <div>
       <h1>Videojuegos Henry</h1>
-      <Link to="/videogame">Crear personaje</Link>
+      <Link to="/videogame">
+        <button>
+           Crear personaje
+        </button>
+        </Link>
       <br></br>
       <button
         onClick={(e) => {
-          refresh(e);
+          handleRefresh(e);
         }}
       >
         Cargar personajes
@@ -44,6 +49,7 @@ export default function Home() {
           <option value="bot">Rating --</option>
         </select>
         <select name="source" id="source">
+        <option value="all">Todos</option>
           <option value="api">Existente</option>
           <option value="db">Nuevo</option>
         </select>
@@ -69,15 +75,13 @@ export default function Home() {
           <option value="Card">Cartas</option>
         </select>
         <div>
-           { allGames.map((e)=>{
+           {  allGames?.map((e)=>{
               return (
                 
                 <Fragment>
-                  {console.log(e)}
                   <Link to ={'/home/'+ e.id}>
-                    <card e/>
+                    <Card name={e.name} img ={e.img} genere={e.genere} rating ={e.rating}/>
                   </Link>
-                  <card e/> 
                 </Fragment>
                 
               )
@@ -85,5 +89,5 @@ export default function Home() {
         </div>
       </div>
     </div>
-  );
+  )
 }

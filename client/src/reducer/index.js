@@ -11,11 +11,10 @@ function rootReducer(state = initialState, action) {
     case "GET_GAMES":
       return {
         ...state,
-        games: action.payload,
+        videogames: action.payload,
       };
     default:
         return state
-      
   }
 }
 
