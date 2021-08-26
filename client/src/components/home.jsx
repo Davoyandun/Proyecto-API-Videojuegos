@@ -4,12 +4,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { getGames } from "../actios";
 import { Link } from "react-router-dom";
 import Card from "./Card";
-
-
+import Pgs from "./Pgs";
 
 export default function Home() {
   const dispatch = useDispatch();
   const allGames = useSelector((state) => state.videogames);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [gamesPerPage] = useState(9);
+  const lastItem = currentPage * gamesPerPage;
+  const firstItem = lastItem - gamesPerPage;
+  const pageActual = allGames.slice(firstItem, lastItem);
+
+  const paginado = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   useEffect(() => {
     dispatch(getGames());
@@ -20,13 +28,11 @@ export default function Home() {
     dispatch(getGames());
   }
   return (
-    <div>
+    <div >
       <h1>Videojuegos Henry</h1>
       <Link to="/videogame">
-        <button>
-           Crear personaje
-        </button>
-        </Link>
+        <button>Crear personaje</button>
+      </Link>
       <br></br>
       <button
         onClick={(e) => {
@@ -49,7 +55,7 @@ export default function Home() {
           <option value="bot">Rating --</option>
         </select>
         <select name="source" id="source">
-        <option value="all">Todos</option>
+          <option value="all">Todos</option>
           <option value="api">Existente</option>
           <option value="db">Nuevo</option>
         </select>
@@ -74,20 +80,31 @@ export default function Home() {
           <option value="Educational">Educativo</option>
           <option value="Card">Cartas</option>
         </select>
-        <div>
-           {  allGames?.map((e)=>{
-              return (
-                
-                <Fragment>
-                  <Link to ={'/home/'+ e.id}>
-                    <Card name={e.name} img ={e.img} genere={e.genere} rating ={e.rating}/>
-                  </Link>
-                </Fragment>
-                
-              )
-            })}
-        </div>
+      </div>
+     
+      <div>
+        {pageActual?.map((e) => {
+          return (
+            <Fragment>
+              <Link to={"/home/" + e.id}>
+                <Card
+                  name={e.name}
+                  img={e.img}
+                  genere={e.genere}
+                  rating={e.rating}
+                />
+              </Link>
+            </Fragment>
+          );
+        })}
+      </div>
+      <div>
+        <Pgs
+          gamesperPage={gamesPerPage}
+          allGame={allGames.length}
+          paginado={paginado}
+        />
       </div>
     </div>
-  )
+  );
 }
